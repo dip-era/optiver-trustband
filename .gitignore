@@ -1,0 +1,24 @@
+# environments and caches
+.venv/
+__pycache__/
+*.egg-info/
+.pytest_cache/
+.cache/
+
+# raw and processed data (re-created by scripts/01_build_dataset.py)
+data/
+
+# secrets
+.env
+
+# editors / OS
+.vscode/
+.idea/
+Thumbs.db
+.DS_Store
+
+# LaTeX build artefacts
+*.aux
+*.log
+*.out
+*.synctex.gz

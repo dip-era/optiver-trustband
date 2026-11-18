@@ -1,0 +1,54 @@
+# TrustBand experiment configuration. Every number used in the pipeline lives here.
+
+paths:
+  data_dir: data                 # relative to the repo root; holds raw/ and processed/
+  results_dir: results
+  stocknet_url: https://codeload.github.com/yumoxu/stocknet-dataset/zip/refs/heads/master
+
+periods:
+  train: ["2014-01-01", "2014-12-31"]
+  calibration: ["2015-01-01", "2015-03-31"]
+  test: ["2015-04-01", "2016-03-31"]
+
+stress_windows:
+  Aug-15 crash: ["2015-08-20", "2015-09-04"]
+  Jan-16 selloff: ["2016-01-04", "2016-02-12"]
+
+conformal:
+  alpha: 0.10          # 1 - target coverage (90% bands)
+  gamma: 0.02          # ACI step size: how fast alpha_t reacts to misses
+  window: 4000         # most recent normalised scores kept per bucket
+
+sentiment:
+  model: ProsusAI/finbert
+  batch_size: 256
+  max_length: 64
+
+trust:
+  # multiplicative penalties per tweet; duplicates of the same text also share one vote
+  automated_client: 0.3
+  new_account: 0.3       # account younger than new_account_days
+  new_account_days: 90
+  cashtag_spam: 0.5      # n_cashtags >= cashtag_spam_min
+  cashtag_spam_min: 4
+  low_followers: 0.5     # followers < low_followers_max
+  low_followers_max: 50
+  gate_threshold: 0.35   # days with trust below this fall back to the price-only model
+
+attacks:
+  seed: 7
+  target_seed: 11
+  fraction: 0.10         # share of test stock-days attacked
+  min_posts: 20          # each attacked day gets max(min_posts, real tweet count) fake posts
+  kinds: [naive, stealth]
+
+lightgbm:
+  n_estimators: 400
+  learning_rate: 0.02
+  num_leaves: 15
+  min_child_samples: 300
+  subsample: 0.8
+  subsample_freq: 1
+  colsample_bytree: 0.8
+  reg_lambda: 5.0
+  verbose: -1
